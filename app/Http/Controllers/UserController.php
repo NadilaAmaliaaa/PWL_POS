@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function index(){
+    // public function index(){
         // $data = [
         //     'username' => 'manager_tiga',
         //     'nama' => 'Manager 3',
@@ -53,15 +53,61 @@ class UserController extends Controller
         //     ],
         // );
 
-        $user = UserModel::firstOrNew(
-            [
-                'username' => 'manager33',
-                'nama' => 'Manager Tiga Tiga',
+        // $user = UserModel::firstOrNew(
+        //     [
+        //         'username' => 'manager33',
+        //         'nama' => 'Manager Tiga Tiga',
+        //         'password' => Hash::make('12345'),
+        //         'level_id' => 2
+        //     ],
+        // );
+        // $user->save();
+        // return view('user', ['data'=>$user]);
+    // }
+
+    // public function index(){
+    //     $user = UserModel::firstOrNew([
+    //             'username' => 'manager55',
+    //             'nama' => 'Manager55',
+    //             'password' => Hash::make('12345'),
+    //             'level_id' => 2
+    //     ]);
+
+    //     $user->username = 'manager55';
+
+    //     $user->isDirty(); //true
+    //     $user->isDirty('username'); //false
+    //     $user->isDirty('nama'); //true
+    //     $user->isDirty(['nama', 'username']); //true
+        
+    //     $user->isClean(); //false
+    //     $user->isClean('username'); //true
+    //     $user->isClean('nama'); //true
+    //     $user->isClean(['nama', 'username']); //false
+
+    //     $user->save();
+
+    //     $user->isDirty(); //false
+    //     $user->isClean(); //true
+    //     dd($user->isDirty());
+    // }
+    public function index(){
+        $user = UserModel::create([
+                'username' => 'manager11',
+                'nama' => 'Manager11',
                 'password' => Hash::make('12345'),
                 'level_id' => 2
-            ],
-        );
+        ]);
+
+        $user->username = 'manager12';
+
         $user->save();
-        return view('user', ['data'=>$user]);
+
+        $user->wasChanged(); // true
+        $user->wasChanged('username'); // true
+        $user->wasChanged(['username', 'level_id']); // true
+        $user->wasChanged('nama'); // false
+        dd($user->wasChanged(['nama', 'username'])); // true
     }
 }
+
