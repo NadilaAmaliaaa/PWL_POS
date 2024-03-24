@@ -12,6 +12,7 @@
             <div class="card-header">Manage Kategori</div>
             <div css="card-body">
                 {{ $dataTable->table() }}
+                <a href="/kategori/create" class="btn btn-outline-primary btn-block" role="button" aria-disabled="true">Tambah Kategori</a>
             </div>
         </div>
     </div>
