@@ -334,6 +334,16 @@ return [
             'icon_color' => 'cyan',
         ],
         [
+            'text' => 'Manage User',
+            'url' => '../user',
+            'icon_color' => 'warning',
+        ],
+        [
+            'text' => 'Manage Level',
+            'url' => '../level',
+            'icon_color' => 'blue',
+        ],
+        [
             'text' => 'change_password',
             'url' => 'admin/settings',
             'icon' => 'fas fa-fw fa-lock',

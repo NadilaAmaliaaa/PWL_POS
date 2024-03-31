@@ -1,8 +1,6 @@
 <?php
 
 namespace App\DataTables;
-
-use App\Models\Kategori;
 use App\Models\KategoriModel;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
@@ -25,7 +23,7 @@ class KategoriDataTable extends DataTable
         return (new EloquentDataTable($query))
             ->setRowId('id')
             ->addColumn('action', function($row) {
-                $button = '<a href="/kategori/ubah/'.$row->kategori_id.'" class="btn btn-sm btn-warning">Ubah</a>';
+                $button = '<a href="kategori/ubah/'.$row->kategori_id.'" class="btn btn-sm btn-warning">Ubah</a>';
                 $button = $button.' <a href="kategori/hapus/'.$row->kategori_id.'" class="btn btn-sm btn-danger">Hapus</a>';                
                 return $button;
             });

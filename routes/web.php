@@ -21,6 +21,11 @@ Route::get('/', function () {
 });
 
 Route::get('/level', [LevelController::class, 'index']);
+Route::get('/level/create', [LevelController::class, 'create']);
+Route::post('/level', [LevelController::class, 'store']);
+Route::get('/level/ubah/{id}', [LevelController::class, 'ubah']);
+Route::put('/level/ubah_simpan/{id}', [LevelController::class, 'ubah_simpan']);
+Route::get('/level/hapus/{id}', [LevelController::class, 'hapus']);
 
 Route::get('/kategori', [KategoriController::class, 'index']);
 Route::get('/kategori/create', [KategoriController::class, 'create']);
@@ -30,8 +35,8 @@ Route::put('/kategori/ubah_simpan/{id}', [KategoriController::class, 'ubah_simpa
 Route::get('/kategori/hapus/{id}', [KategoriController::class, 'hapus']);
 
 Route::get('/user', [UserController::class, 'index']);
-Route::get('/user/tambah', [UserController::class, 'tambah']);
-Route::post('/user/tambah_simpan', [UserController::class, 'tambah_simpan']);
+Route::get('/user/create', [UserController::class, 'tambah']);
+Route::post('/user', [UserController::class, 'store']);
 Route::get('/user/ubah/{id}', [UserController::class, 'ubah']);
 Route::put('/user/ubah_simpan/{id}', [UserController::class, 'ubah_simpan']);
 Route::get('/user/hapus/{id}', [UserController::class, 'hapus']);
