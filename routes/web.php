@@ -3,6 +3,7 @@
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\POSController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,3 +41,12 @@ Route::post('/user', [UserController::class, 'store']);
 Route::get('/user/ubah/{id}', [UserController::class, 'ubah']);
 Route::put('/user/ubah_simpan/{id}', [UserController::class, 'ubah_simpan']);
 Route::get('/user/hapus/{id}', [UserController::class, 'hapus']);
+
+//M_USER
+Route::get('/m_user', [POSController::class, 'index'])->name('m_user.index');
+Route::get('/m_user/show', [POSController::class, 'show'])->name('m_user.show');
+Route::get('/m_user/create', [POSController::class, 'create'])->name('m_user.create');
+Route::post('/m_user', [POSController::class, 'store'])->name('m_user.store');
+Route::get('/m_user/edit/{id}', [POSController::class, 'edit'])->name('m_user.edit');
+Route::put('/m_user/update/{id}', [POSController::class, 'update'])->name('m_user.update');
+Route::get('/m_user/delete/{id}', [POSController::class, 'destroy'])->name('m_user.destroy');
