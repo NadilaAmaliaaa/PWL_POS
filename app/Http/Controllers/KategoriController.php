@@ -33,11 +33,11 @@ class KategoriController extends Controller
         return view('kategori.create');
     }
     public function store(Request $request){
-        $validated = $request->validate([
+        $request->validate([
             'kategori_kode' => 'required',
             'kategori_nama' => 'required',
         ]);
-        KategoriModel::create($validated);
+        KategoriModel::create($request->all());
         return redirect('/kategori');
     }
     public function ubah($id){

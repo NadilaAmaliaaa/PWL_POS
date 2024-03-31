@@ -15,11 +15,16 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="kodeKategori">Kode Kategori</label>
-                        <input type="text" class="form-control" id="kodeKategori" name="kodeKategori" placeholder="Kode Kategori | untuk makanan, contoh: MKN">
-                        <!-- @error('kategori_kode')
+                        <!-- <input type="text" class="form-control" id="kodeKategori" name="kodeKategori" placeholder="Kode Kategori | untuk makanan, contoh: MKN"> -->
+                        <input type="text" 
+                                    name="kategori_kode" 
+                                    id="kategori_kode" 
+                                    class="@error('kategori_kode') is-invalid @enderror form-control" 
+                                    placeholder="">
+                        
+                        @error('kategori_kode')
                             <div class="alert alert-danger">{{ $message }}</div>
-                            class="@error('kategori_kode') is-invalid @enderror"
-                        @enderror -->
+                        @enderror
                     </div>
                     <div class="form-group">
                         <label for="namaKategori">Nama Kategori</label>
@@ -33,14 +38,15 @@
             </form>
         </div>
     </div>
-@endsection
 
-@if($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <strong>Whoops!</strong> Ada masalah dengan inputan anda.<br><br>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+@endsection
