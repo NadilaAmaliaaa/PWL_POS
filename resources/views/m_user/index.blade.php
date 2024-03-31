@@ -29,7 +29,7 @@
         @foreach ($useri as $m_user)
             <tr>
                 <td>{{ $m_user->user_id }}</td>
-                <td>{{ $m_user->level_id }}</td>
+                <td>{{ $m_user->level->level_nama }}</td>
                 <td>{{ $m_user->username }}</td>
                 <td>{{ $m_user->nama }}</td>
                 <td>{{ substr($m_user->password, 0, 10) . "..." }}</td>
