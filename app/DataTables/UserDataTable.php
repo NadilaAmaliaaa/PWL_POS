@@ -24,8 +24,8 @@ class UserDataTable extends DataTable
         return (new EloquentDataTable($query))
             ->setRowId('id')
             ->addColumn('action', function($row) {
-                $button = '<a href="level/ubah/'.$row->kategori_id.'" class="btn btn-sm btn-warning">Ubah</a>';
-                $button = $button.' <a href="level/hapus/'.$row->kategori_id.'" class="btn btn-sm btn-danger">Hapus</a>';                
+                $button = '<a href="user/ubah/'.$row->user_id.'" class="btn btn-sm btn-warning">Ubah</a>';
+                $button = $button.' <a href="user/hapus/'.$row->user_id.'" class="btn btn-sm btn-danger">Hapus</a>';                
                 return $button;
             });
     }

@@ -12,11 +12,8 @@
             </div>
 
             <form action="../user" method="post">
+            @csrf
                 <div class="card-body">
-                    <div class="form-group">
-                        <label for="userId">User ID</label>
-                        <input type="text" class="form-control" id="userId" name="userId" placeholder="User ID">
-                    </div>
                     <div class="form-group">
                         <label for="nama">Nama</label>
                         <input type="text" class="form-control" id="nama" name="nama" placeholder="Nama User">
@@ -40,14 +37,16 @@
             </form>
         </div>
     </div>
-@endsection
 
-@if($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+    
+    @if ($errors->any())
+                <div class="alert alert-danger">
+                    <strong>Whoops!</strong> Ada masalah dengan inputan anda.<br><br>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+@endsection

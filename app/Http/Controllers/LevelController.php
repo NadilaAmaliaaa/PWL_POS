@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\DataTables\LevelDataTable;
+use App\Http\Requests\LevelStorePostRequest;
 use App\Models\LevelModel;
 
 class LevelController extends Controller
@@ -25,12 +26,11 @@ class LevelController extends Controller
         return view('level.create');
     }
     public function store(Request $request){
-        $data = [
-            'level_kode' => $request->kodeLevel,
-            'level_nama' => $request->kodeNama,
-        ];
-        
-        LevelModel::create($data);
+         $request->validate([
+            'kodeLevel' => 'required',
+            'namaLevel' => 'required',
+        ]);
+        LevelModel::create($request->all());
         return redirect('/level');
     }
     public function ubah($id){
@@ -40,8 +40,8 @@ class LevelController extends Controller
     public function ubah_simpan($id, Request $request){
         $level = levelModel::find($id);
         
-        $level->level_kode = $request->kodelevel;
-        $level->level_nama = $request->namalevel;
+        $level->level_kode = $request->levelKode;
+        $level->level_nama = $request->levelNama;
 
         $level->save();
 

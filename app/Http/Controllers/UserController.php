@@ -18,12 +18,18 @@ class UserController extends Controller
     public function tambah(){
         return view('user.create');
     }
-    public function tambah_simpan(Request $request){
-        UserModel::create([
-            'username'=>$request->username,
-            'nama'=>$request->nama,
-            'password'=>Hash::make('$request->password'),
-            'level_id'=>$request->level_id
+    public function store(Request $request){
+        // UserModel::create([
+        //     'username'=>$request->username,
+        //     'nama'=>$request->nama,
+        //     'password'=>Hash::make('$request->password'),
+        //     'level_id'=>$request->level_id
+        // ]);
+        $request->validate([
+            'username' => 'required',
+            'nama' => 'required',
+            'password' => 'required',
+            'levelId' => 'required',
         ]);
         return redirect('/user');
     }

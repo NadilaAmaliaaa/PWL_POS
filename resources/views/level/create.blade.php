@@ -12,6 +12,7 @@
             </div>
 
             <form action="../level" method="post">
+            @csrf
                 <div class="card-body">
                     <div class="form-group">
                         <label for="kodeLevelKategori">Kode Level</label>
@@ -29,14 +30,16 @@
             </form>
         </div>
     </div>
-@endsection
 
-@if($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+    
+    @if ($errors->any())
+                <div class="alert alert-danger">
+                    <strong>Whoops!</strong> Ada masalah dengan inputan anda.<br><br>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+@endsection
