@@ -1,18 +1,18 @@
-@extends('layouts.template')
+@extends ('layouts.app')
 
 {{-- Customize layout sections --}}
 
-@section('subtitle', 'Level')
+@section('subtitle', 'User')
 @section('content_header_title', 'Home')
-@section('content_header_subtitle', 'Level')
+@section('content_header_subtitle', 'User')
 
 @section('content')
     <div class="container">
         <div class="card">
-            <div class="card-header">Manage Level</div>
+            <div class="card-header">Manage User</div>
             <div css="card-body">
                 {{ $dataTable->table() }}
-                <a href="/level/create" class="btn btn-outline-primary btn-block" role="button" aria-disabled="true">Tambah Level</a>
+                <a href="/user/create" class="btn btn-outline-primary btn-block" role="button" aria-disabled="true">Tambah User</a>
             </div>
         </div>
     </div>
