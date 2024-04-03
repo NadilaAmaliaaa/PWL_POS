@@ -4,7 +4,7 @@
     <div class="row mt-5 mb-5">
         <div class="col-lg-12 margin-tb">
             <div class="float-left">
-                <h2>CRUD user</h2>
+                <h2>CRUD USER</h2>
             </div>
             <div class="float-right">
                 <a class="btn btn-success" href="{{ route('m_user.create') }}">Input User</a>

@@ -44,11 +44,11 @@ class POSController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id, UserModel $useri)
+    public function show(string $id)
     {
         $useri = UserModel::findOrFail($id);
-        return view('m_user.show', compact($useri));
-    }
+        return view('m_user.show', compact('useri'));
+    }    
 
     /**
      * Show the form for editing the specified resource.
