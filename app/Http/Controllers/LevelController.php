@@ -36,20 +36,28 @@ class LevelController extends Controller
 
         $activeMenu = 'level'; // set menu yang sedang aktif
 
-        return view('level.index', ['breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu]);
+        $level = LevelModel::all();
+
+        return view('level.index', ['breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu, 'level'=>$level]);
     }
     public function list(Request $request){
-        $levels = LevelModel::select('level_kode', 'level_nama');
+        $levels = LevelModel::select('level_id', 'level_kode', 'level_nama');
+
+        //Filter berdasarkan level_id
+        if($request->level_id){
+            $levels->where('level_id', $request->level_id);
+        }
+
         return DataTables::of($levels)
         ->addIndexColumn()
-        ->addColumn('aksi', function ($levels) { // menambahkan kolom aksi
-            $btn = '<a href="'.url('/level/' . $levels->level_id).'" class="btn btn-info btn-sm">Detail</a> ';
-            $btn .= '<a href="'.url('/level/' . $levels->level_id . '/edit').'" class="btn btn-warning btn-sm">Edit</a> ';
-            $btn .= '<form class="d-inline-block" method="POST" action="'.url('/level/'.$levels->level_id).'">'
-                    . csrf_field() . method_field('DELETE') .
-                    '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakin menghapus data ini?\');">Hapus</button></form>';
-            return $btn;
-        })
+        ->addColumn('aksi', function ($level) { // menambahkan kolom aksi
+                $btn = '<a href="'.url('/level/' . $level->level_id).'" class="btn btn-info btn-sm">Detail</a> ';
+                $btn .= '<a href="'.url('/level/' . $level->level_id . '/edit').'" class="btn btn-warning btn-sm">Edit</a> ';
+                $btn .= '<form class="d-inline-block" method="POST" action="'.url('/level/'.$level->level_id).'">'
+                        . csrf_field() . method_field('DELETE') .
+                        '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakin menghapus data ini?\');">Hapus</button></form>';
+                return $btn;
+            })
         ->rawColumns(['aksi']) // memberitahu bahwa kolom aksi adalah html
         ->make(true);
     }
@@ -79,7 +87,7 @@ class LevelController extends Controller
     }
     public function show(string $id)
     {
-        $level = LevelModel::with('level')->find($id);
+        $level = LevelModel::find($id);
         
         $breadcrumb = (object) [
             'title' => 'Detail level',
@@ -98,7 +106,6 @@ class LevelController extends Controller
     public function edit(string $id)
     {
         $level = LevelModel::find($id);
-        $level = LevelModel::all();
         $breadcrumb = (object)[
             'title' => 'Edit level',
             'list' => ['Home', 'level', 'Edit']
@@ -107,7 +114,7 @@ class LevelController extends Controller
             'title' => 'Edit level'
         ];
         $activeMenu = 'level'; // set menu yang sedang aktif
-        return view('level.edit', compact('breadcrumb', 'page', 'level', 'level', 'activeMenu'));
+        return view('level.edit', compact('breadcrumb', 'page', 'level', 'activeMenu'));
     }
 
 // Menyimpan perubahan data level
