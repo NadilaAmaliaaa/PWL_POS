@@ -64,6 +64,12 @@
             <p>Transaksi Penjualan</p>
         </a>
         </li>
+        <!-- <li class="nav-item">
+        <a href="{{ url('/detailtransaksi') }}" class="nav-link {{ ($activeMenu == 'detail')? 'active' : '' }}">
+            <i class="nav-icon fas fa-cash-register"></i>
+            <p>Detail Transaksi</p>
+        </a>
+        </li> -->
       </ul>
     </nav>
   </div>

@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BarangModel;
+use App\Models\DetailTransaksiModel;
 use Illuminate\Http\Request;
 use App\Models\UserModel;
 use App\Models\TransaksiModel;
+use App\Models\StokModel;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Database\QueryException;
 
@@ -39,7 +42,7 @@ class TransaksiController extends Controller
         ->addIndexColumn()
         ->addColumn('aksi', function ($tran) { // menambahkan kolom aksi
             $btn = '<a href="'.url('/transaksi/' . $tran->penjualan_id).'" class="btn btn-info btn-sm">Detail</a> ';
-            $btn .= '<a href="'.url('/transaksi/' . $tran->penjualan_id . '/edit').'" class="btn btn-warning btn-sm">Edit</a> ';
+            // $btn .= '<a href="'.url('/transaksi/' . $tran->penjualan_id . '/edit').'" class="btn btn-warning btn-sm">Edit</a> ';
             $btn .= '<form class="d-inline-block" method="POST" action="'.url('/transaksi/'.$tran->penjualan_id).'">'
                     . csrf_field() . method_field('DELETE') .
                     '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakin menghapus data ini?\');">Hapus</button></form>';
@@ -56,31 +59,58 @@ class TransaksiController extends Controller
             'title' => 'Tambah transaksi baru'
         ];
         $user = UserModel::all(); // ambil data level untuk ditampilkan di form $activeMenu 'user'; // set menu yang sedang aktif
-        
+        $barang = BarangModel::all();
         $activeMenu = 'penjualan';
         
-        return view('transaksi.create', ['breadcrumb' => $breadcrumb, 'page' => $page, 'user' => $user, 'activeMenu' => $activeMenu]);
+        return view('transaksi.create', ['breadcrumb' => $breadcrumb, 'page' => $page, 'user' => $user, 'barang' => $barang, 'activeMenu' => $activeMenu]);
     }
     public function store(Request $request){
         $request->validate([
             'user_id' => 'required|integer',
             'penjualan_kode' => 'required|string|unique:t_penjualan,penjualan_kode',
             'pembeli' => 'required|string',
-            'penjualan_tanggal' => 'required|date'
+            'penjualan_tanggal' => 'required|date',
+            'barang_id' => 'required|array',
+            'harga' => 'required|array', // Update validasi untuk mencocokkan struktur array
+            'jumlah' => 'required|array|min:1',
         ]);
         
-        TransaksiModel::create([
+        $trans = TransaksiModel::create([
             'user_id' => $request->user_id,
             'penjualan_kode' => $request->penjualan_kode,
             'pembeli' => $request->pembeli,
             'penjualan_tanggal' => $request->penjualan_tanggal
         ]);
+    
+        // Simpan detail penjualan
+        foreach ($request->barang_id as $index => $barang_id) {
+            DetailTransaksiModel::create([
+                'penjualan_id' => $trans->penjualan_id,
+                'barang_id' => $barang_id,
+                'harga' => $request->harga[$index],
+                'jumlah' => $request->jumlah[$index],
+            ]);
         
-        return redirect('/transaksi')->with('success', 'Data stok berhasil disimpan');
-    }
+            // Ambil jumlah stok barang yang tersedia
+            $stok = StokModel::where('barang_id', $barang_id)->first();
+        
+            if ($stok) {
+                // Kurangi jumlah yang dibeli dari jumlah stok yang tersedia
+                $stok->stok_jumlah -= $request->jumlah[$index];
+        
+                // Simpan kembali jumlah stok yang telah diupdate
+                $stok->save();
+            }
+        }
+        return redirect('/transaksi')->with('success', 'Data transaksi berhasil disimpan');
+    }    
     public function show(string $id)
     {
         $transaksi = TransaksiModel::with('user')->find($id);
+
+        $detail = DetailTransaksiModel::with('barang', 'transaksi')
+        ->where('penjualan_id', $id)
+        ->get();
         
         $breadcrumb = (object) [
             'title' => 'Detail Transaksi',
@@ -93,7 +123,7 @@ class TransaksiController extends Controller
 
         $activeMenu = 'penjualan'; // set menu yang sedang aktif
         
-        return view('transaksi.show', compact('breadcrumb', 'page', 'transaksi', 'activeMenu'));
+        return view('transaksi.show', compact('breadcrumb', 'page', 'transaksi', 'activeMenu', 'detail'));
     }
     // Menampilkan halaman form edit user
     public function edit(string $id)
