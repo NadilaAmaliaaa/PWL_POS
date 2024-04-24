@@ -35,6 +35,46 @@
                         <td>{{ $transaksi->penjualan_tanggal }}</td>
                     </tr>
                 </table> <br><br>
+                @if ($detail)
+                <h2 class="card-title">Detail:</h2>
+                <table class="table table-bordered table-striped table-hover table-sm" id="table_penjualan">
+                    <thead>
+                        <tr>
+                            <th>Nama Barang</th>
+                            <th>Harga</th>
+                            <th>Jumlah</th>
+                            <th>Total Harga</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @php
+                    $total = 0;
+                    @endphp
+                    @forelse ($detail as $item)
+                    @php
+                    $totalHargaBarang = $item->harga * $item->jumlah;
+                    $total += $totalHargaBarang;
+                    @endphp
+                            <tr>
+                                <td>{{ $item->barang->barang_nama }}</td>
+                                <td>{{ $item->harga }}</td>
+                                <td>{{ $item->jumlah }}</td>
+                                <td>{{ $item->harga * $item->jumlah }}</td>
+                            </tr>
+                        @endforeach
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" align="center"><strong>Total Harga</strong></td>
+                                <td><strong></strong>{{ $total }}</td>
+                            </tr>
+                        </tfoot>
+                    @else
+                        <tr>
+                            <td colspan="5">No data available</td>
+                        </tr>
+                    @endif
+                </tbody>
+                </table>
             @endempty
             <a href="{{ url('transaksi') }}" class="btn btn-sm btn-default mt-2">Kembali</a>
         </div>

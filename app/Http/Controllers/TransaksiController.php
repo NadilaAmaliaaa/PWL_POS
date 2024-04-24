@@ -61,8 +61,12 @@ class TransaksiController extends Controller
         $user = UserModel::all(); // ambil data level untuk ditampilkan di form $activeMenu 'user'; // set menu yang sedang aktif
         $barang = BarangModel::all();
         $activeMenu = 'penjualan';
+
+        // Mengambil ID transaksi terakhir
+        $counter = (TransaksiModel::selectRaw("CAST(RIGHT(penjualan_kode, 3) AS UNSIGNED) AS counter")->orderBy('penjualan_id', 'desc')->value('counter')) + 1;
+        $penjualan_kode = 'PJL' . sprintf("%03d", $counter);
         
-        return view('transaksi.create', ['breadcrumb' => $breadcrumb, 'page' => $page, 'user' => $user, 'barang' => $barang, 'activeMenu' => $activeMenu]);
+        return view('transaksi.create', ['breadcrumb' => $breadcrumb, 'page' => $page, 'user' => $user, 'barang' => $barang, 'activeMenu' => $activeMenu, 'lastID' => $penjualan_kode]);
     }
     public function store(Request $request){
         $request->validate([
@@ -75,6 +79,26 @@ class TransaksiController extends Controller
             'jumlah' => 'required|array|min:1',
         ]);
         
+        // Array untuk menyimpan barang yang stoknya tidak mencukupi
+        $failedTransactions = [];
+    
+        // Periksa ketersediaan stok sebelum membuat transaksi
+        foreach ($request->barang_id as $index => $barang_id) {
+            // Ambil jumlah stok barang yang tersedia
+            $stok = StokModel::where('barang_id', $barang_id)->first();
+    
+            if ($stok && $request->jumlah[$index] > $stok->stok_jumlah) {
+                // Tambahkan barang yang stoknya tidak mencukupi ke array failedTransactions
+                $failedTransactions[] = $barang_id;
+            }
+        }
+    
+        // Jika ada barang yang stoknya tidak mencukupi, kembalikan dengan pesan kesalahan
+        if (!empty($failedTransactions)) {
+            return redirect('/transaksi')->with('error', 'Transaksi gagal. Jumlah stok barang tidak mencukupi untuk barang-barang berikut: ' . implode(', ', $failedTransactions));
+        }
+    
+        // Jika semua stok mencukupi, buat transaksi dan detail transaksi
         $trans = TransaksiModel::create([
             'user_id' => $request->user_id,
             'penjualan_kode' => $request->penjualan_kode,
@@ -90,18 +114,13 @@ class TransaksiController extends Controller
                 'harga' => $request->harga[$index],
                 'jumlah' => $request->jumlah[$index],
             ]);
-        
-            // Ambil jumlah stok barang yang tersedia
+    
+            // Kurangi jumlah yang dibeli dari jumlah stok yang tersedia
             $stok = StokModel::where('barang_id', $barang_id)->first();
-        
-            if ($stok) {
-                // Kurangi jumlah yang dibeli dari jumlah stok yang tersedia
-                $stok->stok_jumlah -= $request->jumlah[$index];
-        
-                // Simpan kembali jumlah stok yang telah diupdate
-                $stok->save();
-            }
+            $stok->stok_jumlah -= $request->jumlah[$index];
+            $stok->save();
         }
+    
         return redirect('/transaksi')->with('success', 'Data transaksi berhasil disimpan');
     }    
     public function show(string $id)
@@ -168,7 +187,8 @@ class TransaksiController extends Controller
             return redirect('/transaksi')->with('error', 'Data transaksi tidak ditemukan');
         }
         try {
-            TransaksiModel::destroy($id); // Hapus data level
+            DetailTransaksiModel::where('penjualan_id', $id)->delete();
+            $check->delete();   
             return redirect('/transaksi')->with('success', 'Data transaksi berhasil dihapus');
         } catch (QueryException $e) {
             // Jika terjadi error ketika menghapus data, redirect kembali ke halaman dengan membawa pesan error
