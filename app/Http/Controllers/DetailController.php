@@ -28,7 +28,7 @@ class DetailController extends Controller
         return view('detailtransaksi.index', ['breadcrumb' => $breadcrumb, 'page' => $page, 'transaksi' => $trans, 'detail'=>$detail, 'activeMenu' => $activeMenu]);
     }
     public function list(Request $request){
-        $detail = DetailTransaksiModel::select('detail_id', 'barang_id', 'penjualan_id', 'harga','jumlah')
+        $detail = DetailTransaksiModel::select('detail_id', 'barang_id', 'penjualan_id', 'harga','jumlah', 'image')
                 ->with('transaksi', 'barang');
 
         //Filter berdasarkan user

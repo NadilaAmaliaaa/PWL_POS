@@ -41,6 +41,7 @@
                     <thead>
                         <tr>
                             <th>Nama Barang</th>
+                            <th>Image</th>
                             <th>Harga</th>
                             <th>Jumlah</th>
                             <th>Total Harga</th>
@@ -57,6 +58,9 @@
                     @endphp
                             <tr>
                                 <td>{{ $item->barang->barang_nama }}</td>
+                                <td>
+                                    <img src="{{ asset($item->barang->image) }}" alt="{{ $item->barang->barang_nama }}" class="img-thumbnail" width="100">
+                                </td>
                                 <td>{{ $item->harga }}</td>
                                 <td>{{ $item->jumlah }}</td>
                                 <td>{{ $item->harga * $item->jumlah }}</td>

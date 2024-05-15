@@ -26,7 +26,7 @@ class BarangController extends Controller
         return view('barang.index', ['breadcrumb' => $breadcrumb, 'page' => $page, 'kategori' => $kategori, 'activeMenu' => $activeMenu]);
     }
     public function list(Request $request){
-        $barangs = BarangModel::select('barang_id', 'barang_kode', 'barang_nama','harga_beli', 'harga_jual', 'kategori_id')
+        $barangs = BarangModel::select('barang_id', 'barang_kode', 'barang_nama','harga_beli', 'harga_jual', 'kategori_id', 'image')
                 ->with('kategori');
 
         //Filter berdasarkan level_id
