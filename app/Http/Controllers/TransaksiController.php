@@ -125,7 +125,7 @@ class TransaksiController extends Controller
     }    
     public function show(string $id)
     {
-        $transaksi = TransaksiModel::with('user')->find($id);
+        $transaksi = TransaksiModel::with('user')->find($id); 
 
         $detail = DetailTransaksiModel::with('barang', 'transaksi')
         ->where('penjualan_id', $id)

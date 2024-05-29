@@ -33,19 +33,20 @@ class FileUploadController extends Controller
         //     echo "Tidak ada berkas yang diupload";
         // }
         $request->validate([
-            'berkas'=>'required|file|image|max:500'
+            'berkas'=>'required|file|image|max:500',
+            'nama_berkas'=>'required|string'
         ]);
-        $extfile = $request->berkas->getClientOriginalName();
-        $namaFile = 'web-'.time().".".$extfile;
+        // $extfile = $request->berkas->getClientOriginalName();
+        // $namaFile = 'web-'.time().".".$extfile;
 
         // $path = $request->berkas->storeAs('public', $namaFile);
-        $path = $request->berkas->move('gambar', $namaFile);
-        $path = str_replace("\\", "//", $path);
+        $path = $request->berkas->move('gambar', $request->nama_berkas);
+        $path = str_replace("\\", "/", $path);
         echo "Variabel path berisi: $path <br>";
 
-        $pathBaru = asset('gambar/'.$namaFile);
-        echo "Proses upload berhasil, data disimpan pada: $path";
-        echo "<br>";
-        echo "Tampilkan link:<a href='$pathBaru'>$pathBaru</a>";
+        $pathBaru = asset('gambar/' . $request->nama_berkas);
+        echo "Proses upload berhasil, data disimpan pada: $path <br>";
+        // echo "Tampilkan link:<a href='$pathBaru'>$pathBaru</a>";
+        echo "<img src='$pathBaru' alt='Uploaded Image'>";
     }
 }
